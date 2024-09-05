@@ -87,13 +87,13 @@ export async function getForecastWeather(city: string, days: number): Promise<st
         });
 
         const forecastData = response.data;
-        let forecast = `Прогноз погоды для ${city} на ${days} ${days === 1 ? 'день' : 'дней'}:\n`;
+        let forecast = `Прогноз погоды для города ${city} на ${days} ${days === 1 ? 'день' : 'суток'}:\n`;
 
         const getTimeOfDay = (hour: number) => {
             if (hour >= 6 && hour < 12) return 'Утро';
             if (hour >= 12 && hour < 18) return 'Обед';
             if (hour >= 18 && hour < 24) return 'Вечер';
-            return 'Ночь';
+             return 'Ночь';
         };
 
         const groupedByDate: { [key: string]: { [key: string]: any } } = {};
