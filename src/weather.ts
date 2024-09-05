@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 import dotenv from 'dotenv';
 import puppeteer from 'puppeteer';
@@ -48,8 +47,6 @@ export async function getCurrentWeather(city: string): Promise<string | null> {
 }
 
 
-
-
 // Функция для парсинга данных с сайта погоды
 export async function getWeatherFromWebsite(city: string): Promise<string | null> {
     try {
@@ -93,7 +90,7 @@ export async function getForecastWeather(city: string, days: number): Promise<st
             if (hour >= 6 && hour < 12) return 'Утро';
             if (hour >= 12 && hour < 18) return 'Обед';
             if (hour >= 18 && hour < 24) return 'Вечер';
-             return 'Ночь';
+            return 'Ночь';
         };
 
         const groupedByDate: { [key: string]: { [key: string]: any } } = {};
@@ -106,7 +103,7 @@ export async function getForecastWeather(city: string, days: number): Promise<st
                 groupedByDate[date] = {};
             }
 
-            // Добавляем данные только для утро/обед/вечер если их нет еще
+            // Добавляем данные только для утро/обед/вечер/ночь если их нет еще
             if (!groupedByDate[date][timeOfDay]) {
                 const description = weatherDescriptions[item.weather[0].description] || item.weather[0].description;
                 groupedByDate[date][timeOfDay] = {
@@ -118,12 +115,18 @@ export async function getForecastWeather(city: string, days: number): Promise<st
 
         const dates = Object.keys(groupedByDate).slice(0, days); // Оставляем данные только для нужного количества дней
 
+        const timeOfDayOrder = ['Утро', 'Обед', 'Вечер', 'Ночь'];
+
         dates.forEach(date => {
             forecast += `${date}:\n`;
-            Object.keys(groupedByDate[date]).forEach((timeOfDay) => {
-                const { temp, description } = groupedByDate[date][timeOfDay];
-                forecast += `${timeOfDay}: ${temp}°C, ${description}\n`;
+
+            timeOfDayOrder.forEach((timeOfDay) => {
+                if (groupedByDate[date][timeOfDay]) {
+                    const { temp, description } = groupedByDate[date][timeOfDay];
+                    forecast += `${timeOfDay}: ${temp}°C, ${description}\n`;
+                }
             });
+
             forecast += '\n';
         });
 
@@ -133,3 +136,4 @@ export async function getForecastWeather(city: string, days: number): Promise<st
         return null;
     }
 }
+
