@@ -1,0 +1,27 @@
+{
+  "name": "second_project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bot.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node src/bot.ts",
+    "dev": "ts-node src/bot.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "dotenv": "^16.4.5",
+    "node-cache": "^5.1.2",
+    "node-telegram-bot-api": "^0.66.0",
+    "puppeteer": "^23.3.0",
+    "telegraf": "^4.16.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  }
+}
