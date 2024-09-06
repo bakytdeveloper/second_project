@@ -10,6 +10,3 @@ export function getCachedWeatherData(city: string): string | undefined {
     return cache.get(city);
 }
 
-export function deleteCachedWeatherData(city: string) {
-    cache.del(city);
-}

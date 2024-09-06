@@ -41,7 +41,6 @@ export async function getCurrentWeather(city: string): Promise<string | null> {
         const description = weatherDescriptions[weatherData.weather[0].description] || weatherData.weather[0].description;
         return `Температура в ${city}: ${weatherData.main.temp}°C, ${description}`;
     } catch (error) {
-        // console.error('Ошибка при получении данных о текущей погоде через API:', error);
         return null;
     }
 }

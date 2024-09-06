@@ -4,6 +4,7 @@
   "description": "",
   "main": "bot.ts",
   "scripts": {
+    "test": "jest",
     "build": "tsc",
     "start": "ts-node src/bot.ts",
     "dev": "ts-node src/bot.ts"
