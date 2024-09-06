@@ -26,24 +26,27 @@ const weatherDescriptions: { [key: string]: string } = {
     'fog': 'Густой туман'
 };
 
+
 // Получение текущей погоды через API
-export async function getCurrentWeather(city: string): Promise<string | null> {
+export async function getCurrentWeather(city: string, units: 'metric' | 'imperial' = 'metric'): Promise<string | null> {
     try {
         const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather/`, {
             params: {
                 q: city,
                 appid: API_KEY,
-                units: 'metric'
+                units
             }
         });
 
         const weatherData = response.data;
         const description = weatherDescriptions[weatherData.weather[0].description] || weatherData.weather[0].description;
-        return `Температура в ${city}: ${weatherData.main.temp}°C, ${description}`;
+        const unitSymbol = units === 'metric' ? '°C' : '°F';
+        return `Температура в ${city}: ${weatherData.main.temp}${unitSymbol}, ${description}`;
     } catch (error) {
         return null;
     }
 }
+
 
 
 // Функция для парсинга данных с сайта погоды
@@ -72,13 +75,14 @@ export async function getWeatherFromWebsite(city: string): Promise<string | null
 }
 
 
-export async function getForecastWeather(city: string, days: number): Promise<string | null> {
+// Прогноз погоды
+export async function getForecastWeather(city: string, days: number, units: 'metric' | 'imperial' = 'metric'): Promise<string | null> {
     try {
         const response = await axios.get(`https://api.openweathermap.org/data/2.5/forecast/`, {
             params: {
                 q: city,
                 appid: API_KEY,
-                units: 'metric'
+                units
             }
         });
 
@@ -102,7 +106,6 @@ export async function getForecastWeather(city: string, days: number): Promise<st
                 groupedByDate[date] = {};
             }
 
-            // Добавляем данные только для утро/обед/вечер/ночь если их нет еще
             if (!groupedByDate[date][timeOfDay]) {
                 const description = weatherDescriptions[item.weather[0].description] || item.weather[0].description;
                 groupedByDate[date][timeOfDay] = {
@@ -112,7 +115,7 @@ export async function getForecastWeather(city: string, days: number): Promise<st
             }
         });
 
-        const dates = Object.keys(groupedByDate).slice(0, days); // Оставляем данные только для нужного количества дней
+        const dates = Object.keys(groupedByDate).slice(0, days);
 
         const timeOfDayOrder = ['Утро', 'Обед', 'Вечер', 'Ночь'];
 
@@ -122,7 +125,8 @@ export async function getForecastWeather(city: string, days: number): Promise<st
             timeOfDayOrder.forEach((timeOfDay) => {
                 if (groupedByDate[date][timeOfDay]) {
                     const { temp, description } = groupedByDate[date][timeOfDay];
-                    forecast += `${timeOfDay}: ${temp}°C, ${description}\n`;
+                    const unitSymbol = units === 'metric' ? '°C' : '°F';
+                    forecast += `${timeOfDay}: ${temp}${unitSymbol}, ${description}\n`;
                 }
             });
 
@@ -135,4 +139,3 @@ export async function getForecastWeather(city: string, days: number): Promise<st
         return null;
     }
 }
-
